@@ -1,6 +1,6 @@
 # nix-image-flake
 
-A nix flake that generates an iso running NixOS.
+A nix flake that generates an image running NixOS.
 
 ## Tasks
 
