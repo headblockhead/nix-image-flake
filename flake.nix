@@ -1,5 +1,5 @@
 {
-  description = "Nix flake for building a NixOS ISO";
+  description = "Nix flake for building a NixOS image";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
