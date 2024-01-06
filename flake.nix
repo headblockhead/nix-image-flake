@@ -8,6 +8,7 @@
   outputs = { nixpkgs, ... }:
     let
       nixosConfigurations = {
+        # Build an ISO image.
         isoSystem = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux"; # build on x86_64-linux, for x86_64-linux.
           modules = [
@@ -15,6 +16,8 @@
             ./configuration.nix
           ];
         };
+
+        # Build an SD card image.
         sdSystem = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux"; # build on x86_64-linux, cross-compile to aarch64-linux.
           modules = [
@@ -28,6 +31,7 @@
             }
           ];
         };
+
       };
     in
     {
