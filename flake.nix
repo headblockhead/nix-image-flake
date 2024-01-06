@@ -1,7 +1,3 @@
-# Uncomment all the commented lines below and run:
-# nix build .\#images.sdcard
-# to build an aarch64 SD card image. (For the Raspberry Pi or similar.)
-
 {
   description = "Nix flake for building a NixOS ISO";
 
@@ -11,22 +7,31 @@
 
   outputs = { nixpkgs, ... }:
     let
-      nixosConfigurations.system = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          # "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-new-kernel-no-zfs-installer.nix"
-          # {
-          #   nixpkgs.config.allowUnsupportedSystem = true;
-          #   nixpkgs.crossSystem.system = "aarch64-linux";
-          # }
+      nixosConfigurations = {
+        isoSystem = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux"; # build on x86_64-linux, for x86_64-linux.
+          modules = [
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/iso-image.nix"
+            ./configuration.nix
+          ];
+        };
+        sdSystem = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux"; # build on x86_64-linux, cross-compile to aarch64-linux.
+          modules = [
+            "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64-new-kernel-no-zfs-installer.nix"
+            ./configuration.nix
 
-          "${nixpkgs}/nixos/modules/installer/cd-dvd/iso-image.nix"
-          ./configuration.nix
-        ];
+            # Cross-compile to aarch64-linux.
+            {
+              nixpkgs.config.allowUnsupportedSystem = true;
+              nixpkgs.crossSystem.system = "aarch64-linux";
+            }
+          ];
+        };
       };
     in
     {
-      images.iso = nixosConfigurations.system.config.system.build.isoImage;
-      # images.sdcard = nixosConfigurations.system.config.system.build.sdImage;
+      images.iso = nixosConfigurations.isoSystem.config.system.build.isoImage;
+      images.sd = nixosConfigurations.sdSystem.config.system.build.sdImage;
     };
 }

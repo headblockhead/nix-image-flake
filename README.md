@@ -4,10 +4,18 @@ A nix flake that generates an iso running NixOS.
 
 ## Tasks
 
-### Build
+### Build-iso
 
 Builds the image.
 
 ```bash
 nix build .\#images.iso
+```
+
+### Build-sd
+
+Builds the image for aarch64.
+
+```bash
+nix build .\#images.sd
 ```
